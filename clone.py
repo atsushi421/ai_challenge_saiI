@@ -13,14 +13,14 @@ from sklearn.model_selection import train_test_split
 
 from utils.resnet import resnet50_model
 from keras.backend import tensorflow_backend as backend
-
+import random
 
 # model name
 NVIDIA = "nvidia"
 RESNET50 = "resnet50"
 
-MODEL_NAME = NVIDIA
-# MODEL_NAME = RESNET50
+# MODEL_NAME = NVIDIA
+MODEL_NAME = RESNET50
 
 
 def getrowsFromDrivingLogs(dataPath):
@@ -125,8 +125,8 @@ if __name__ == "__main__":
 
     
     #Make sure to set batch size within 40
+    # is_dataset = True
     is_dataset = False
-    # is_dataset = False
     
     #When making "is_dataset" True, saving preprocessed datasets
     #When making "is_dataset" False, using preprocessed and saved datasets. Shortens time because preprocessing is not required.It must be preprocessed once.
@@ -141,7 +141,13 @@ if __name__ == "__main__":
             f.create_dataset('outputs', data=outputs)
     
     else:
-        with h5py.File('./trainingData.h5', 'r') as f:
+        # with h5py.File('./trainingData.h5', 'r') as f:
+        #     inputs = np.array(f['inputs'])
+        #     outputs = np.array(f['outputs'])
+        with h5py.File('./myresnet50_01.h5', 'r') as f:
+            # inputs = np.concatenate([inputs, np.array(f['inputs'])], axis=0)
+            # outputs = np.concatenate([outputs, np.array(f['outputs'])], axis=0)
+
             inputs = np.array(f['inputs'])
             outputs = np.array(f['outputs'])
 
