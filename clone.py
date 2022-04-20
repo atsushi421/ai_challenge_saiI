@@ -115,7 +115,7 @@ if __name__ == "__main__":
         model = resnet50_model()
 
     
-    #Make sure to set batch size within 40
+
     is_dataset = True
     # is_dataset = False
     
