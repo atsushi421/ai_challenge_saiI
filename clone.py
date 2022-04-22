@@ -56,11 +56,14 @@ def getImagesAndSteerings(rows):
         steering_right = steering - parameter
         
         #center
-        getImageArray3angle(row[0], steering, images, steerings)
-        #left
-        getImageArray3angle(row[1], steering_left, images, steerings)
+        if row[0]:
+            getImageArray3angle(row[0], steering, images, steerings)
+        # #left
+        if row[1]:
+            getImageArray3angle(row[1], steering_left, images, steerings)
         #right
-        getImageArray3angle(row[2], steering_right, images, steerings)
+        if row[2]:
+            getImageArray3angle(row[2], steering_right, images, steerings)
         
     
     return (np.array(images), np.array(steerings))
@@ -71,6 +74,7 @@ def trainModelAndSave(model, inputs, outputs, epochs, batch_size):
     #Setting model
     model.compile(loss='mean_squared_error', optimizer=Adam(lr=1.0e-4))
     #Learning model
+    # model.fit(inputs, outputs, batch_size=batch_size, nb_epoch=epochs, verbose=1, validation_data=(X_valid, y_valid))
     model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=epochs, verbose=1, validation_data=(X_valid, y_valid))
     #Saving model
     model.save("models/" + MODEL_NAME + ".h5")
@@ -141,15 +145,30 @@ if __name__ == "__main__":
             f.create_dataset('outputs', data=outputs)
     
     else:
+        use_data_path = [
+            # "./data_center.h5",
+            # "./data_left_corner.h5",
+            # "./data_right_corner.h5",
+            "./trainingData.h5",
+            "./data_normal_cycle.h5",
+            "./data_bridge.h5",
+            # "./data_first_corce_out.h5"
+        ]
+
+        for i, path in enumerate(use_data_path):
+            if i == 0:
+                with h5py.File(path, 'r') as f:
+                    inputs = np.array(f['inputs'])
+                    outputs = np.array(f['outputs'])
+            else:
+                with h5py.File(path, 'r') as f:
+                    inputs = np.concatenate([inputs, np.array(f['inputs'])], axis=0)
+                    outputs = np.concatenate([outputs, np.array(f['outputs'])], axis=0)
+
+
         # with h5py.File('./trainingData.h5', 'r') as f:
         #     inputs = np.array(f['inputs'])
-        #     outputs = np.array(f['outputs'])
-        with h5py.File('./myresnet50_01.h5', 'r') as f:
-            # inputs = np.concatenate([inputs, np.array(f['inputs'])], axis=0)
-            # outputs = np.concatenate([outputs, np.array(f['outputs'])], axis=0)
-
-            inputs = np.array(f['inputs'])
-            outputs = np.array(f['outputs'])
+        #     outputs = np.array(f['outputs']) 
 
     print('Training data:', inputs.shape)
     print('Training label:', outputs.shape)
@@ -157,6 +176,7 @@ if __name__ == "__main__":
     print("start " + MODEL_NAME + " model training...")
         
     #Training and saving model
-    trainModelAndSave(model, inputs, outputs, epochs, batch_size)
+    if not is_dataset:
+        trainModelAndSave(model, inputs, outputs, epochs, batch_size)
 
     backend.clear_session()

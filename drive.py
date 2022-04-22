@@ -63,16 +63,17 @@ def telemetry(sid, data):
             MIN_SPEED = 8
 
             # zero_steearing = 0.05
-            zero_steearing = 0.13
+            zero_steearing = 0.15
             if -zero_steearing < steering_angle < zero_steearing:
                 steering_angle = 0
             
-            if float(speed) > MAX_SPEED:
-                throttle = -1.0
-            elif float(speed) < MIN_SPEED:
-                throttle = 1.0
-            else:
-                throttle = 0.2
+            # if float(speed) > MAX_SPEED:
+            #     throttle = -1.0
+            # elif float(speed) < MIN_SPEED:
+            #     throttle = 1.0
+            # else:
+            #     throttle = 0.2
+            throttle = 1.0
 
             print('steering_angle:{} throttle:{} speed:{}'.format(steering_angle, throttle, speed))
             send_control(steering_angle, throttle)
