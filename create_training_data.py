@@ -17,6 +17,7 @@ def getrowsFromDrivingLogs(dataPath):
 
 
 def getImageArray3angle(imagePath, steering, images, steerings):
+    imagePath = './data/IMG/' + os.path.basename(imagePath)
     originalImage = cv2.imread(imagePath.strip())
     image = cv2.cvtColor(originalImage, cv2.COLOR_BGR2RGB)
     images.append(image)
