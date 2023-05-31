@@ -12,13 +12,13 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-python@v2
         with:
-          python-version: "3.5.6"
+          python-version: "3.5.9"
 
       # 環境構築
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r conda-gpu_requirements.txt
+          pip install -r requirements.txt
       
       # h5データの生成
       - name: Create training data
